@@ -1,0 +1,29 @@
+{
+	"version": "1.0",
+	"name": "Bible+",
+	"description": "Reader for bibles and other books",
+	"size": 102166,
+	"package_path": "https://schnark.github.io/bible-plus/bible-plus.zip",
+	"icons": {
+		"128": "/res/icon/icon128.png",
+		"512": "/res/icon/icon512.png"
+	},
+	"developer": {
+		"name": "Michael Müller",
+		"url": "https://github.com/Schnark"
+	},
+	"default_locale": "en",
+	"activities": {
+		"open": {
+			"filters": {
+				"filename": {
+					"pattern": ".*\\.(zip|html|xml)",
+					"regexp": "\\.(zip|html|xml)$"
+				}
+			},
+			"disposition": "window",
+			"returnValue": false,
+			"href": "/index.html"
+		}
+	}
+}

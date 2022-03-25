@@ -1,0 +1,19 @@
+{
+	"@comment": "Note that the code to transform these data into a webpage is in https://github.com/Schnark/schnark.github.io",
+	"title": {
+		"en": "Bible+ – App for Firefox OS",
+		"de": "Bible+ – App für Firefox OS"
+	},
+	"serviceworker": false,
+	"icon": "res/icon/icon128.png",
+	"screenshots": [
+		"1.png",
+		"2.png",
+		"3.png",
+		"4.png"
+	],
+	"desc": {
+		"en": ["This app is meant for reading bible translations and other books.", "Bibles in different formats can be imported. The app allows you to add bookmarks (including notes and highlighting), has a fulltext search and provides different options of appearance."],
+		"de": ["Diese App ist zum Lesen von Bibelübersetzungen und anderen Büchern da.", "Bibeln verschiedener Formate können importiert werden. Die App ermöglicht es Lesezeichen zu setzen (inklusive Notizen und Hervorhebungen), verfügt über eine Volltextsuche und bietet verschiedene Darstellungsmöglichkeiten."]
+	}
+}

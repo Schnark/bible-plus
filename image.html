@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<title>Image converter</title>
+<meta charset="utf-8">
+<script src="convert/image.js" defer></script>
+<style>
+#output-source {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+</style>
+</head><body>
+<p><label>Image: <input id="image" type="file"></label></p>
+<p><label><input id="raw" type="checkbox"> raw</label></p>
+<p><label>Max. size: <input id="max-size" type="number" value="256" min="1"></label></p>
+<p><label>Fill: <input id="fill"></label></p>
+<p><label>Format: <select id="format"><option>image/jpeg</option><option>image/png</image></select></p>
+<p><label>Quality: <input id="quality" type="number" value="0.8" min="0" max="1"></label></p>
+<p id="output-example"><p>
+<pre id="output-source"></pre>
+</body></html>

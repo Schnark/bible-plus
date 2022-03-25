@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Test-Sammlung</title>
+</head>
+<body data-type="test" data-abbr="Test [de]" data-desc="Test-Sammlung">
+<div title="Gruppe">
+<article id="test" title="Test" class="intro" data-abbr="T" data-abbr-section="T %s" data-abbr-verse="T %v" data-desc="Test-Buch">
+<section data-abbr="E" class="intro">
+<p>Einleitung</p>
+</section>
+<section data-abbr="1">
+<p id="test-1">1. Erster Absatz im ersten Abschnitt.</p>
+<p id="test-2">2. Zweiter Absatz im ersten Abschnitt mit <a href="#test-3" class="preview">Link zum ersten Absatz im zweiten Abschnitt</a>.</p>
+</section>
+<section data-abbr="2">
+<p id="test-3">3. Erster Absatz im zweiten Abschnitt.<span class="fn" data-content="Fußnote mit &lt;a href=&quot;#test2-1&quot; class=&quot;preview&quot;&gt;Link zum zweiten Buch&lt;/a&gt;.">*</span></p>
+</section>
+</article>
+<div title="Untergruppe">
+<article id="test2" title="Test 2" data-abbr="T2" data-abbr-section="T2 %s" data-abbr-verse="T2 %v" data-desc="Zweites Test-Buch">
+<section data-abbr="E" class="intro">
+<p>Einleitung</p>
+</section>
+<section data-abbr="1">
+<p id="test2-1">1. Erster Absatz im ersten Abschnitt.</p>
+<p id="test2-2">2. Zweiter Absatz im ersten Abschnitt mit <a href="#test-3" class="preview">Link zum ersten Absatz im zweiten Abschnitt des ersten Buchs</a>.</p>
+</section>
+<section data-abbr="2">
+<p id="test2-3">3. Erster Absatz im zweiten Abschnitt.<span class="fn" data-content="Fußnote">*</span></p>
+</section>
+</article>
+</div>
+</div>
+<article id="test3" title="Test 3" data-abbr="T3" data-abbr-section="T3 %s" data-abbr-verse="T %v">
+<section data-abbr="1">
+<p id="test3-1"><span class="id">1</span> Eins</p>
+<p id="test3-2"><span class="id">2</span> Zwei</p>
+<p id="test3-3"><span class="id">3</span> Drei</p>
+<p id="test3-4"><span class="id">4</span> Vier</p>
+</section>
+</article>
+</body>
+</html>

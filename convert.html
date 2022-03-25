@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<title>Convert and create collections</title>
+<meta charset="utf-8">
+<script src="res/lib/polyfill.js" defer></script>
+<script src="res/lib/pako.min.js" defer></script>
+<script src="res/lib/zip.js" defer></script>
+<script src="res/util.js" defer></script>
+<script src="res/file.js" defer></script>
+<script src="res/parser/bible-data.js" defer></script>
+<script src="res/parser/book-builder.js" defer></script>
+<script src="res/parser/generic-html-converter.js" defer></script>
+<script src="res/parser/parser.js" defer></script>
+<script src="res/parser/annotated-html.js" defer></script>
+<script src="res/parser/roundtrip-html.js" defer></script>
+<script src="res/parser/sword.js" defer></script>
+<script src="res/parser/zefania.js" defer></script>
+<script src="convert/check.js" defer></script>
+<script src="convert/scrapper.js" defer></script>
+<script src="convert/scrapper/bibleserver.js" defer></script>
+<script src="convert/scrapper/vatican.js" defer></script>
+<script src="convert/scrapper/vatican-bible.js" defer></script>
+<script src="convert/wysiwyg.js" defer></script>
+<script src="convert/convert.js" defer></script>
+<style>
+textarea {
+	display: block;
+	width: 100%;
+}
+#book-warning:not(:empty) {
+	padding: 0 1em;
+	border: solid thin red;
+}
+pre:not(:empty) {
+	border: dashed thin;
+}
+#wysiwyg-editor {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background: white;
+	padding: 1em;
+	border: solid thin;
+	margin: 0.5em;
+}
+#wysiwyg-buttons {
+	padding: 0.5em;
+}
+#wysiwyg-input {
+	height: calc(100% - 2em);
+	overflow: auto;
+}
+</style>
+</head><body>
+<p><button id="button-open">Open file</button> <label><input id="merge" type="checkbox"> Merge books</label></p>
+<fieldset><legend>Scrap</legend><p>
+<label>Mode: <select id="scrap-mode">
+<option value="vatican">vatican.va (encyclicals etc.)</option>
+<option value="bibleserver">Bibleserver</option>
+<option value="bibleserver-debug">Bibleserver (Debug)</option>
+<option value="vaticanbible">vatican.va (Nova Vulgata)</option>
+<option value="vaticanbible-debug">vatican.va (Nova Vulgata) (Debug)</option>
+</select></label>
+<label>Data: <input id="scrap-data"></label>
+<button id="button-structure">Create structure</button>
+<button id="button-scrap">Scrap</button>
+</p></fieldset>
+<p><button id="button-check">Check books</button></p>
+<fieldset>
+<legend>Collection</legend>
+<p><label>Title: <input id="collection-title"></label></p>
+<p><label>Lang: <input id="collection-lang"></label></p>
+<p><label>Type: <input id="collection-type"></label></p>
+<p><label>Abbr: <input id="collection-abbr"></label></p>
+<p><label>Sort: <input id="collection-sort"></label></p>
+<p><label>Desc: <input id="collection-desc"></label></p>
+<p><label>Structure: <textarea id="structure" rows="10"></textarea></label></p>
+</fieldset>
+<fieldset>
+<legend>Book</legend>
+<p><label>Name: <select id="book-name"></select></label></p>
+<p><label>ID: <input id="book-id"></label> <button id="button-id">Change</button></p>
+<p><label>Title: <input id="book-title"></label></p>
+<p><label>Lang: <input id="book-lang"></label></p>
+<p><label>Abbr: <input id="book-abbr"></label></p>
+<p><label>Abbr (Section): <input id="book-abbr-section"></label></p>
+<p><label>Abbr (Verse): <input id="book-abbr-verse"></label></p>
+<p><label>Desc: <input id="book-desc"></label></p>
+<p><label>Class: <input id="book-cls"></label></p>
+<p><label>HTML: <textarea id="book-html" rows="10"></textarea></label><br>
+<button id="button-edit">Edit (WYSIWYG)</button> <button id="button-show-structure">Show structure</button></p>
+<div id="book-warning"></div>
+</fieldset>
+<p><button id="button-format">Format</button> <button id="button-save">Save as file</button></p>
+<pre id="output"></pre>
+<div id="wysiwyg-editor" hidden>
+<div id="wysiwyg-buttons"><button id="wysiwyg-cancel">Cancel</button> <button id="wysiwyg-save">Save</button></div>
+<div id="wysiwyg-input" contentEditable="true"></div>
+</div>
+</body></html>

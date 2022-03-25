@@ -1,0 +1,659 @@
+html {
+	font-family: sans-serif;
+	line-height: 1.3;
+	background: #fff;
+	background: var(--background);
+	color: #222;
+	color: var(--text);
+}
+
+button,
+input,
+select {
+	font: inherit;
+}
+
+button {
+	/*set the default value explicitely*/
+	-moz-box-sizing: boder-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+input:not([type="checkbox"]),
+select {
+	display: block;
+	width: 100%;
+	margin: 0px;
+}
+
+svg {
+	fill: currentColor;
+}
+
+html,
+body,
+article,
+#progress {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+header {
+	background-color: #005;
+	color: white;
+	height: 3rem;
+	line-height: 2;
+	overflow: hidden;
+	position: relative;
+}
+
+header h1 {
+	line-height: 2;
+	margin: 0 3rem;
+	height: 2em;
+	font-size: 150%;
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+header .left-2 ~ h1 {
+	margin-left: 6rem;
+}
+
+header button {
+	color: inherit;
+	cursor: pointer;
+}
+
+header .left,
+header .left-2,
+header .right {
+	position: absolute;
+	top: 0;
+	display: block;
+}
+
+header .left-2 {
+	left: 3rem;
+}
+
+header .right {
+	right: 0;
+}
+
+header .icon {
+	width: 3rem;
+	height: 3rem;
+	line-height: 3;
+	text-align: center;
+	border: none;
+	background: transparent;
+}
+
+header .icon:focus {
+	color: #def;
+}
+
+header .icon svg {
+	width: 1.5rem;
+	height: 1.5rem;
+	vertical-align: middle;
+}
+
+header .float.icon {
+	margin: 0 0.5rem;
+}
+
+header .float:not(.icon) {
+	font-size: 80%;
+	height: 2rem;
+	margin: 0.5rem;
+	line-height: 2;
+	cursor: pointer;
+	border: solid 2px #66a;
+	border-radius: 4px;
+	background: #ccf;
+	color: black;
+	max-width: calc(50% - 9rem); /*2 buttons, 16rem are used by 4 icons, 2rem by by margin*/
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+@media (max-width: 27em) {
+	header .float.icon {
+		margin: 0 0.1rem;
+	}
+	header .float:not(.icon) {
+		margin: 0.5rem 0.25rem;
+		max-width: calc(50% - 6.9rem); /*icons now use 12.8rem, margin 1rem*/
+	}
+}
+
+.body {
+	height: calc(100% - 3rem);
+	overflow: auto;
+	padding: 0 1em;
+}
+
+#progress {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(255, 255, 255, 0.7);
+	background: var(--transparent);
+	padding: 5em 0 0 0;
+	text-align: center;
+	font-size: 150%;
+	font-weight: bold;
+}
+
+@keyframes rotate {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+#spinner {
+	animation: rotate 1s steps(6) infinite;
+}
+
+.popup {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	max-height: 10rem;
+	overflow: auto;
+	margin: 0.1rem;
+	border: solid thin;
+	padding: 0.5rem;
+	background: #fff;
+	background: var(--background);
+	box-shadow: 0 0 0.3rem;
+}
+
+.popup button {
+	float: right;
+}
+
+.popup .body {
+	padding: 0;
+}
+
+#footnote-popup > p:first-of-type {
+	margin-top: 0;
+}
+
+#footnote-popup > p:last-of-type {
+	margin-bottom: 0;
+}
+
+#bookmarkedit-text {
+	width: calc(100% - 1rem);
+}
+
+#bookmarkedit-color {
+	margin-top: 0.5rem;
+}
+
+#bookmarkedit-color span {
+	display: inline-block;
+	width: 1.5rem;
+	height: 1.5rem;
+	margin: 0.2rem;
+	cursor: pointer;
+	outline: solid thin #000;
+	border-radius: 50%;
+	-moz-outline-radius: 50%;
+	color: transparent;
+}
+
+#bookmarkedit-color input[type="radio"] {
+	display: none;
+}
+
+#bookmarkedit-color input[type="radio"]:checked ~ span {
+	outline: solid medium #00f;
+}
+
+.search-results {
+	line-height: 2;
+}
+
+.search-results li {
+	cursor: pointer;
+}
+
+#drop-file {
+	border: thin dashed;
+	padding: 1em;
+}
+
+.button-list,
+.button-list-inline {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.button-list button {
+	display: block;
+	width: 100%;
+	line-height: 2;
+	margin-top: 0.75rem;
+	text-align: left;
+}
+
+.button-list button.split {
+	display: inline-block;
+	width: calc(100% - 2rem);
+}
+
+.button-list button.split + button {
+	display: inline-block;
+	width: 2rem;
+}
+
+.button-list-inline button {
+	line-height: 2;
+	margin: 0.75rem 0.25rem;
+}
+
+.button-list-inline li {
+	display: inline;
+	padding: 0.2rem;
+}
+
+fieldset {
+	margin-top: 1rem;
+}
+
+table.compare {
+	width: 100%;
+	border: 0;
+}
+
+table.compare,
+table.compare > tbody > tr,
+table.compare > tbody > tr > td {
+	margin: 0;
+	padding: 0 0.5em;
+	border: 0;
+	vertical-align: top;
+}
+
+table.compare p:last-child {
+	margin-bottom: 0;
+}
+
+#book-page h1,
+#book-page h2,
+#book-page h3,
+#book-page h4,
+#book-page h5,
+#book-page h6 {
+	color: #9a373b;
+	color: var(--headline);
+}
+
+#book-page h1 {
+	font-size: 175%;
+	font-weight: bold;
+}
+
+#book-page h2 {
+	font-size: 150%;
+	font-weight: bold;
+}
+
+#book-page h3 {
+	font-size: 125%;
+	font-weight: normal;
+}
+
+#book-page h4 {
+	font-size: 112.5%;
+	font-weight: bold;
+}
+
+#book-page h5 {
+	font-size: 100%;
+	font-weight: bold;
+}
+
+#book-page h6 {
+	font-size: 100%;
+	font-weight: normal;
+}
+
+p {
+	margin: 1em 0;
+}
+
+li p {
+	margin: 0.2em 0;
+}
+
+li {
+	margin: 0.2em 0;
+}
+
+sup,
+sub {
+	line-height: 0;
+}
+
+em {
+	font-style: normal;
+	letter-spacing: 0.15em;
+}
+
+hr {
+	border: none;
+	background: transparent;
+	color: inherit;
+	border-top: solid thin;
+	margin: 1em 40px;
+}
+
+figure {
+	text-align: center;
+	padding: 1em;
+	border-top: solid thin;
+	border-bottom: solid thin;
+}
+
+figure img {
+	max-width: 100%;
+}
+
+pre {
+	border: thin dashed;
+	padding: 0.5em;
+}
+
+dt {
+	font-weight: bold;
+}
+
+table {
+	border-collapse: collapse;
+	border: thin solid;
+}
+
+table th,
+table td {
+	border: thin solid;
+	padding: 0.2em;
+}
+
+.border {
+	border: solid thin;
+}
+
+.indention {
+	display: inline-block;
+	width: 1em;
+}
+
+.divine-name {
+	font-variant: small-caps;
+}
+
+html.woc-true .woc {
+	color: #ab2222;
+	color: var(--red);
+}
+
+a,
+.fn:not(.inline) {
+	color: #2b55ab;
+	color: var(--link);
+	cursor: pointer;
+}
+
+html.footnote-none .fn,
+html.footnote-none .fn-ref,
+html.footnote-some .fn.info {
+	display: none;
+}
+
+.punct,
+.edit-alternative,
+.edit-removed {
+	color: #72777d;
+	color: var(--light);
+}
+
+html.grammer-true [data-grammer]::after {
+	content: " [" attr(data-grammer) "] ";
+	font-size: 50%;
+	color: #72777d;
+	color: var(--light);
+}
+
+html.edits-false .edit-removed,
+html.edits-false .edit-alternative {
+	display: none;
+}
+
+html.edits-true .edit-added {
+	text-decoration: underline;
+}
+
+.edit-removed {
+	text-decoration: line-through;
+}
+
+html.edits-true .edit-modified {
+	text-decoration: underline;
+	-moz-text-decoration-style: dotted;
+	text-decoration-style: dotted;
+}
+
+p.intro,
+button.intro {
+	font-style: italic;
+}
+
+.colored {
+	color: #9a373b;
+	color: var(--headline);
+}
+
+.bookmark,
+.bookmark-add {
+	color: #7a7a00;
+	color: var(--yellow);
+	cursor: pointer;
+}
+
+/*after .bookmark-add*/
+.id {
+	color: #72777d;
+	color: var(--light);
+}
+
+.id-big {
+	font-weight: bold;
+	font-size: 200%;
+	float: left;
+	clear: both;
+	color: #72777d;
+	color: var(--light);
+}
+
+/*TODO
+not all color combinations have a good contrast,
+though at least normal text on most backgrounds
+and in all skins is okey.
+*/
+@keyframes flash {
+	0% {
+		background-color: hsla(60,50%,60%,0.5);
+	}
+	50% {
+		background-color: #ff0;
+	}
+	100% {
+		background-color: hsla(60,50%,60%,0.5);
+	}
+}
+
+.highlight-temp {
+	animation: flash 0.5s;
+	background-color: hsla(60,50%,60%,0.5);
+}
+
+.highlight-1 {
+	background-color: hsla(0,30%,50%,0.5);
+}
+
+.highlight-1 .bookmark {
+	color: hsl(0,50%,50%);
+}
+
+.highlight-2 {
+	background-color: hsla(40,50%,50%,0.5);
+}
+
+.highlight-2 .bookmark {
+	color: hsl(40,70%,50%);
+}
+
+.highlight-3 {
+	background-color: hsla(144,30%,50%,0.5);
+}
+
+.highlight-3 .bookmark {
+	color: hsl(144,50%,50%);
+}
+
+.highlight-4 {
+	background-color: hsla(216,30%,50%,0.5);
+}
+
+.highlight-4 .bookmark {
+	color: hsl(216,50%,50%);
+}
+
+.highlight-5 {
+	background-color: hsla(288,30%,50%,0.5);
+}
+
+.highlight-5 .bookmark {
+	color: hsl(288,50%,50%);
+}
+
+html.skin-light {
+	--background: #fff;
+	--transparent: rgba(255, 255, 255, 0.7);
+	--text: #222;
+	--headline: #9a373b;
+	--link: #2b55ab;
+	--light: #72777d;
+	--red: #ab2222;
+	--yellow: #7a7a00;
+}
+
+html.skin-dark {
+	--background: #222;
+	--transparent: rgba(34, 34, 34, 0.7);
+	--text: #c8ccd1;
+	--headline: #db9c9e;
+	--link: #91ade4;
+	--light: #a2a9b1;
+	--red: #ea9696;
+	--yellow: #ff0;
+}
+
+html.skin-sepia {
+	--background: #f4ecd8;
+	--transparent: rgba(244, 236, 216, 0.7);
+	--text: #5b4636;
+	--headline: #883134;
+	--link: #264b97;
+	--light: #676c71;
+	--red: #971e1e;
+	--yellow: #6f6f00;
+}
+
+html.size-8 {
+	font-size: 8px;
+}
+
+html.size-9 {
+	font-size: 9px;
+}
+
+html.size-10 {
+	font-size: 10px;
+}
+
+html.size-11 {
+	font-size: 11px;
+}
+
+html.size-12 {
+	font-size: 12px;
+}
+
+html.size-13 {
+	font-size: 13px;
+}
+
+html.size-14 {
+	font-size: 14px;
+}
+
+html.size-15 {
+	font-size: 15px;
+}
+
+html.size-16 {
+	font-size: 16px;
+}
+
+html.size-17 {
+	font-size: 17px;
+}
+
+html.size-18 {
+	font-size: 18px;
+}
+
+html.size-19 {
+	font-size: 19px;
+}
+
+html.size-20 {
+	font-size: 20px;
+}
+
+html.size-21 {
+	font-size: 21px;
+}
+
+html.size-22 {
+	font-size: 22px;
+}
+
+html.size-23 {
+	font-size: 23px;
+}
+
+html.size-24 {
+	font-size: 24px;
+}

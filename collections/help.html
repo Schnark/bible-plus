@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Help</title>
+</head>
+<body data-type="help" data-abbr="Help [en]">
+<article id="help" title="Usage" data-abbr="U" data-abbr-section="U %s" data-abbr-verse="U %v">
+<section data-abbr="1">
+<h1>Usage</h1>
+<h2>1. Basic Usage</h2>
+<p>This app is a reader mainly intended for bible translations, but also for other texts like encyclicals or any other documents.</p>
+<p>All your texts form a <i>library</i>, which consists of <i>collections</i>, collections consist of <i>books</i>, books consist of <i>chapters</i>. For bibles, the collection is a bible translation, and each biblical book is a book in that collection.</p>
+<p>The start screen allows you to select a collection, then you select the book in that collection, and finally the chapter you want to start reading with.</p>
+<p>The header of the main screen shows the current collection (which allows you to quickly switch to the same book in a different collection, i.e. in a different translation; you can also initiate a side-by-side view comparing two versions) and the current book (which allows you to quickly switch to a different chapter or different book). You can access the history to return to a book you previously read, start a search (in the current book, the current collection or the whole library), or access your bookmarks.</p>
+<p>To add a bookmark just click or tap the verse number (or the bookmark icon, if there are no verse numbers). You can also add a note and a highlight color. Note that this help is special because it doesn’t have verses or anything similar, so you cannot add bookmarks here.</p>
+<p>To view a bookmark just click or tap the bookmark icon, from there you can edit or delete it. If a book exists in several collections (e.g. the same biblical book in different translations) the bookmark will be shown for all, not only for the collection where you added it.</p>
+<p>In the settings you can configure the appearance and other details. Note that some settings are only supported for books with the respective metadata.</p>
+</section>
+<section data-abbr="2">
+<h2>2. Importing Collections</h2>
+<p>To use a collection you have to import it first. Either you select the file in the settings (on Firefox OS this requires a file picker app) or you select it in the file manager (only in Firefox OS). After the import is complete you no longer need to keep the file.</p>
+<p>The app supports four different formats:</p>
+<ul>
+<li>Annotated HTML</li>
+<li>Sword</li>
+<li>Zefania XML</li>
+<li>RoundtripHTML</li>
+</ul>
+<p>All these formats allow texts with the best quality, but of course they also allow bad quality. The quality of a bible will depend very much on the quality of its source, which may vary from completely broken to excellent. So if you encounter a badly formatted bible, do not blame the format for it. If the errors aren’t that severe, you can export it, edit it by hand, and re-import it.</p>
+<h3>Annotated HTML</h3>
+<p>Annotated HTML is the internal format. You can read about it in a <a href="#annotatedhtml">separate documentation</a>.</p>
+<p>Files are expected to have the extension <code>.html</code>. Alternatively, you can compress them to a ZIP file with just this one file as content.</p>
+<h3>Sword</h3>
+<p>Bibles in the Sword format are partially supported. Actually only a small portion of the Sword format is implemented, but the most commonly used parts are. Sword files are expected to be ZIP files with extension <code>.zip</code>. Many files of that format are available at <a href="http://www.crosswire.org/sword/modules/ModDisp.jsp?modType=Bibles" target="_blank">http://www.crosswire.org/sword/modules/ModDisp.jsp?modType=Bibles</a>.</p>
+<h3>Zefania XML</h3>
+<p>Bibles in Zefania XML format are supported. Files are expected to have the extension <code>.xml</code>. As with Annotated HTML you may compress them into a ZIP file. Many files of that format are available at <a href="https://app.box.com/s/et4h5qhkcf2itcp8nv22" target="_blank">https://app.box.com/s/et4h5qhkcf2itcp8nv22</a> and <a href="https://sourceforge.net/projects/zefania-sharp/files/Bibles/" target="_blank">https://sourceforge.net/projects/zefania-sharp/files/Bibles/</a>.</p>
+<h3>RoundtripHTML</h3>
+<p>Bibles in RoundtripHTML format are supported. For documentation on this format see <a href="https://github.com/schierlm/BibleMultiConverter" target="_blank">https://github.com/schierlm/BibleMultiConverter</a>. Files are expected to be ZIP files with the extension <code>.zip</code>. Some files of that format are available at <a href="https://bibel.github.io/" target="_blank">https://bibel.github.io/</a>.</p>
+</section>
+<section data-abbr="3">
+<h2>3. Future plans</h2>
+<p>I have several ideas for future improvements.</p>
+<h3>Improved search</h3>
+<p>Currently the search can only give you the chapter where a phrase occurs. In future it should be able to show you the exact verse. It should also be possible to highlight the search term in the text.</p>
+<h3>Different versification schemes</h3>
+<p>All bibles should internally use the same versification scheme. Currently they just use what the source uses. In almost every case this shouldn’t be a problem, but it might be improved in future. This should also include solutions to handle books like Daniel, which sometimes is split into two books.</p>
+<h3>Improved comparing translations</h3>
+<p>When comparing translations, some texts outside verses might get lost, and other minor problems might occur. This should be improved in future.</p>
+<h3>Other ideas</h3>
+<ul>
+<li>Allow links to books in other collections</li>
+<li>Support for reading plans</li>
+<li>A function to select a random chapter or verse</li>
+<li>Better support for grammer annotations</li>
+<li>Encode footnotes in a way that makes them usable in plain HTML</li>
+<li>Improved support for CSS styles: style sheets in collections, arbitrary user style sheets</li>
+<li>Allow direct editing of books (to correct small mistakes, etc.)</li>
+</ul>
+</section>
+</article>
+<article id="annotatedhtml" title="Annotated HTML" data-abbr="AH" data-abbr-section="AH %s" data-abbr-verse="AH %v">
+<section data-abbr="1">
+<h1>Annotated HTML</h1>
+<h2>1. Basic Concepts</h2>
+<p>The Annotated HTML format is built on the following concepts:</p>
+<dl>
+<dt>Collection</dt>
+<dd>Collection of several (or just one) books.<br>Examples: A bible translation, all encyclicals by John Paul II.</dd>
+<dt>Group</dt>
+<dd>A group inside a collection, containing some of its books or subgroups.<br>Examples: The New Testament, the Gospels.</dd>
+<dt>Book</dt>
+<dd>A book inside a collection.<br>Examples: A biblical book, an encyclical.</dd>
+<dt>Section</dt>
+<dd>A part in a book that should appear in the table of contents.<br>Example: A chapter of a biblical book.</dd>
+<dt>Verse</dt>
+<dd>The smallest part in a book that can be referenced.<br>Examples: A verse of a biblical book, a paragraph of an encyclical.</dd>
+<dt>Footnote</dt>
+<dd>A footnote in a book.<br>Examples: An explanation in a biblical book, a list of related texts.</dd>
+<dt>Grammer annotation</dt>
+<dd>A word or a phrase with additional data about its grammer.<br>Example: A word with a Strong number.</dd>
+<dt>Reference</dt>
+<dd>A reference to a verse of the same book or a verse of a book in the same collection.<br>Examples: A reference to a related text inside a footnote, a link to a different paragraph in the text.</dd>
+<dt>Other content</dt>
+<dd>Content not inside a verse.<br>Example: A headline.</dd>
+</dl>
+<p>These elements can have the following properties:</p>
+<dl>
+<dt>Collection</dt>
+<dd><dl>
+<dt>Title</dt> <dd>The title of the collection.<br>Example: Full title of the bible translation.</dd>
+<dt>Type</dt> <dd>The type of the collection, used for ordering.<br>Example: <code>bible</code>.</dd>
+<dt>Abbreviation</dt> <dd>A short identifier for the collection.<br>Example: Common abbreviation for the translation. It is suggested to add the language code in square brackets.</dd>
+<dt>Description</dt> <dd>An optional short description of the collection.<br>Example: Name of the translator and date of the translation.</dd>
+<dt>Language</dt> <dd>The (main) language of the collection.</dd>
+<dt>Sortkey</dt> <dd>An optional key used for the order of collections.</dd>
+<dt>Content</dt> <dd>The list of groups and books in the collection.</dd>
+</dl></dd>
+
+<dt>Group</dt>
+<dd><dl>
+<dt>Title</dt> <dd>The name of the group.</dd>
+<dt>Content</dt> <dd>The list of groups and books in the group.</dd>
+</dl></dd>
+
+<dt>Book</dt>
+<dd><dl>
+<dt>Title</dt> <dd>The title of the book.</dd>
+<dt>ID</dt> <dd>A unique id for the book. This must only contain lower-case letters and numbers. The same book in different collections must use the same id.</dd>
+<dt>Abbreviation</dt> <dd>A short identifier for the book. There are three variants: The abbreviation for the book alone, the abbreviation for a section (which should contain <code>%s</code> as placeholder) and the abbreviation for a verse (which should contain <code>%v</code> and can contain <code>%s</code> as placeholder).</dd>
+<dt>Description</dt> <dd>An optional short description of the book.</dd>
+<dt>Language</dt> <dd>The (main) language of the book, if different from the collection.</dd>
+<dt>Content</dt> <dd>The sections of the book.</dd>
+</dl></dd>
+
+<dt>Section</dt>
+<dd><dl>
+<dt>Abbreviation</dt> <dd>A short identifier for the section, which will be inserted into the abbreviation of the book.</dd>
+<dt>Content</dt> <dd>The content of the section, consisting of verses, footnotes, references and other content.</dd>
+</dl></dd>
+
+<dt>Verse</dt>
+<dd><dl>
+<dt>ID</dt> <dd>A unique id for the verse. This must start with the ID of the book followed by a hyphen. The same verse in different collections must use the same id.</dd>
+<dt>Abbreviation</dt> <dd>An optional abbreviation for the verse. Only necessary if the verse doesn’t contain a visual representation of the ID.</dd>
+<dt>Content</dt> <dd>The content of the verse, consisting of verse, footnotes, references and other content. This should contain a visual representation of the ID, and can consist of several parts (e.g. when divided by paragraph breaks). Note that the ID need not match the section, nor the visual representation, e.g. for the psalms which may use different numberings for internal IDs and what is actually shown. Verses may be empty (if it doesn’t exist in a translation), or include other verses (if two verses are translated as union).</dd>
+</dl></dd>
+
+<dt>Footnote</dt>
+<dd><dl>
+<dt>Name</dt> <dd>The footnote mark.</dd>
+<dt>Content</dt> <dd>The content of the footnote, consisting of references and other content.</dd>
+</dl></dd>
+
+<dt>Grammer annotation</dt>
+<dd><dl>
+<dt>Annotation</dt> <dd>The grammer annotation.</dd>
+<dt>Content</dt> <dd>The annotated word or phrase.</dd>
+</dl></dd>
+
+<dt>Reference</dt>
+<dd><dl>
+<dt>Link</dt> <dd>The ID of the referenced verse or book.</dd>
+<dt>Content</dt> <dd>The visible content of the reference, consisting of other content.</dd>
+</dl></dd>
+
+<dt>Other content</dt>
+<dd><dl>
+<dt>Content</dt> <dd>The actual content.</dd>
+</dl></dd>
+</dl>
+</section>
+<section data-abbr="2">
+<h2>2. HTML representation</h2>
+<p>The elements and their properties are represented as an HTML document. In most cases each element is represented by an HTML tag with the properties as attributes.</p>
+<dl>
+<dt>Collection</dt>
+<dd>HTML document, with attribute <code>lang</code>, <code>&lt;title&gt;</code> in the head, and on <code>&lt;body&gt;</code> attributes <code>data-type</code>, <code>data-abbr</code>, <code>data-sort</code>, <code>data-desc</code>, and the content inside it. Feel free to add other meta-data to the head, though it will be ignored and won’t survive export.</dd>
+
+<dt>Group</dt>
+<dd><code>&lt;div&gt;</code> with attribute <code>title</code>, and content inside it.</dd>
+
+<dt>Book</dt>
+<dd><code>&lt;article&gt;</code> with attributes <code>title</code>, <code>id</code>, <code>data-abbr</code>, <code>data-abbr-section</code>, <code>data-abbr-verse</code>, <code>data-desc</code>, <code>lang</code>, and the content inside it.</dd>
+
+<dt>Section</dt>
+<dd><code>&lt;section&gt;</code> with attribute <code>data-abbr</code>, and the content inside it.</dd>
+
+<dt>Verse</dt>
+<dd>Any HTML element (<code>&lt;span&gt;</code> or <code>&lt;div&gt;</code> if nothing more specific matches), with attribute <code>id</code> or attribute <code>data-idcont</code> (for split verse), and the content inside it. The visual representation of the ID should be enclosed in any HTML element (<code>&lt;span&gt;</code> if nothing more specific matches) with class <code>id</code>. If this doesn’t exist (or if it is different from what you want), use the <code>data-abbr</code> attribute on the verse.</dd>
+
+<dt>Footnote</dt>
+<dd>Any HTML element (<code>&lt;span&gt;</code> if nothing more specific matches), with attribute <code>data-content</code> and class <code>fn</code>, and the name inside it. Use additional classes to specify the type of the footnote.</dd>
+
+<dt>Grammer annotation</dt>
+<dd>Any HTML element (<code>&lt;span&gt;</code> if nothing more specific matches), with attribute <code>data-grammer</code> and the content inside it. The annotation should be a Strong number, prefixed by <code>H</code> or <code>G</code> (for Hebrew/Greek) or a RMAC string. You can also add several annotations separated by spaces.</dd>
+
+<dt>Reference</dt>
+<dd><code>&lt;a&gt;</code> with attribute <code>href</code> (with <code>#id</code> as content), and the content inside it. If you want to reference more than one verse (especially a range), then include all referenced IDs (including the one in <code>href</code>) separated by spaces (but without <code>#</code>) in the <code>data-ref</code> attribute. You may want to add the class <code>preview</code> to the link, to allow viewing the content like a footnote instead of navigating.</dd>
+
+<dt>Other content</dt>
+<dd>Any HTML element. Note that images, videos etc. must be embedded as <code>data:</code>-URIs, and external links must add <code>target="_blank"</code>. No <code>id</code> attributes are allowed (that would turn them into verses), neither are <code>&lt;article&gt;</code> or <code>&lt;section&gt;</code> nor anything that isn’t allowed according the HTML spec. Avoid inline styles, if you really need them then make sure that they work independently from font size, font color and background color. Headlines should use <code>&lt;h1&gt;</code> for the main title, <code>&lt;h2&gt;</code> for the section title and <code>&lt;h3&gt;</code> to <code>&lt;h6&gt;</code> for subheadlines inside the section.</dd>
+</dl>
+</section>
+<section data-abbr="3">
+<h2>3. Details</h2>
+<h3>Special classes</h3>
+<p>There are some classes you can use on some or any elements.</p>
+<table>
+<tr><th>Class</th><th>Meaning</th><th>Example</th><th>Result</th></tr>
+<tr><td><code>punct</code></td><td>Secondary punctuation, e.g. slashes in poetic texts</td>
+<td><code>verse&lt;span class="punct"&gt;&amp;nbsp;/&lt;/span&gt; verse</code></td><td>verse<span class="punct">&nbsp;/</span> verse</td></tr>
+<tr><td><code>indention</code></td><td>Use an empty element with this class after a line break to indent that line</td>
+<td><code>line&lt;br&gt;&lt;span class="indention"&gt;&lt;/span&gt;line</code></td><td>line<br><span class="indention"></span>line</td></tr>
+<tr><td><code>divine-name</code></td><td>Translation of JHWH</td>
+<td><code>the &lt;span class="divine-name"&gt;Lord&lt;/span&gt;</code></td><td>the <span class="divine-name">Lord</span></td></tr>
+<tr><td><code>woc</code></td><td>Words of Christ</td>
+<td><code>Jesus said: &lt;q class="woc"&gt;Amen.&lt;/q&gt;</code></td><td>Jesus said: <q class="woc">Amen.</q></td></tr>
+<tr><td><code>colored</code></td><td>For styling, uses the same accent color as for headlines</td>
+<td><code>a &lt;span class="colored"&gt;colored&lt;/span&gt; word</code></td><td>a <span class="colored">colored</span> word</td></tr>
+<tr><td><code>border</code></td><td>Adds a small border e.g. to an image</td>
+<td><code>&lt;img src="data:image/png;base64,iV..." class="border"&gt;</code></td><td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YGARc5KB0XV+IAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAF1JREFUGNO9zL0NglAAxPEfdLTs4BZM4DIO4C7OwQg2JoQ9LE1exdlYvBBeZ7jqch9//q1uH4TLzw4d6+ErXMMcXuHWxId3KOETnnXXV6MJpcq2MLaI97CER3N0vr4MkhoXe0rZigAAAABJRU5ErkJggg==" class="border"></td></tr>
+<tr><td><code>intro</code></td><td>Marks an introduction. Can be used on books (Example: Introduction to the Gospels, as a separate book before the gospels themselves), a section (Example: Introduction to a specific book inside that book), or actually anywhere else. Introductions in this sense also include appendices.</td>
+<td><code>&lt;section class="intro" data-abbr="I"&gt;...&lt;/section&gt;</code></td><td></td></tr>
+<tr><td><code>id</code></td><td>Marks an element as visual representation of the ID of a verse</td>
+<td><code>&lt;span class="id"&gt;1&amp;nbsp;&lt;/span&gt;Verse</code></td><td><span class="id">1&nbsp;</span>Verse</td></tr>
+<tr><td><code>id-big</code></td><td>Marks an element as visual representation of the abbr of a section</td>
+<td><code>&lt;span class="id-big"&gt;1&amp;nbsp;&lt;/span&gt;</code></td><td><span class="id-big">1&nbsp;</span></td></tr>
+<tr><td><code>edit-added</code></td><td rowspan="4">Details about the translation: text added, removed or modified in the translation, alternative translation</td>
+<td><code>text &lt;span class="edit-added"&gt;added&lt;/span&gt; in translation</code></td><td>text <span class="edit-added">added</span> in translation</td></tr>
+<tr><td><code>edit-removed</code></td>
+<td><code>text &lt;span class="edit-removed"&gt;removed&lt;/span&gt; in translation</code></td><td>text <span class="edit-removed">removed</span> in translation</td></tr>
+<tr><td><code>edit-modified</code></td>
+<td><code>text &lt;span class="edit-modified"&gt;modified&lt;/span&gt; in translation</code></td><td>text <span class="edit-modified">modified</span> in translation</td></tr>
+<tr><td><code>edit-alternative</code></td>
+<td><code>translation &lt;span class="edit-alternative"&gt;(alternative translation)&lt;/span&gt;</code></td><td>translation <span class="edit-alternative">(alternative translation)</span></td></tr>
+</table>
+<p>Some classes are reserved for internal usage. These are <code>body</code>, <code>popup</code>, <code>search-results</code>, <code>button-list</code>, <code>button-list-inline</code>, <code>bookmark</code>, <code>bookmark-add</code>, <code>compare</code>, and any class starting with <code>highlight-</code>.</p>
+<p>For the classes used for footnotes and references see the next sections.</p>
+<h3>Footnotes</h3>
+<p>Footnotes use the class <code>fn</code>, the content of the footnote is placed in the <code>data-content</code> attribute. So a simple footnote can be added with the following code: <code>&lt;sup class="fn" data-content="Footnote content"&gt;*&lt;/sup&gt;</code> The result is this footnote.<sup class="fn" data-content="Footnote content">*</sup></p>
+<p>Footnotes with additional information that most readers don’t care about should additionally add the class <code>info</code>, which will hide the footnote by default.<sup class="fn info" data-content="Footnote content">*</sup></p>
+<p>You can also show the footnote inline by adding the class <code>inline</code>.<sup class="fn inline" data-content="Footnote content">*</sup> This can be combined with <code>info</code>.<sup class="fn info inline" data-content="Footnote content">*</sup></p>
+<h3>References</h3>
+<p>References are links with a local <code>href</code>, referring to a verse in the same collection, e.g. <code>&lt;a href="#foo-1"&gt;</code>. You can also refer to more than one verse by using the <code>data-ref</code> attribute: <code>&lt;a href="#foo-1" data-ref="foo-1 foo-2"&gt;</code></p>
+<p>Two additional classes exist for references: The class <code>fn-ref</code> marks a reference that should be treated like a footnote (i.e., an inline reference that should be hidden when other footnotes are hidden, too), the class <code>preview</code> allows showing a preview in a footnote instead of navigating to the book.</p>
+<h3>Grammer annotations</h3>
+<p>Currently grammer annotations are only poorly supported. The format is <code>&lt;span data-grammer="G001"&gt;word&lt;/span&gt;</code>, this shows as: <span data-grammer="G001">word</span></p>
+<h3>Images and other media</h3>
+<p>You can add images and other media, but you must embed them as <code>data:</code>-URIs. Unless you want an image to show inline, put it into a <code>&lt;figure&gt;</code> tag. Use the class <code>border</code> to add a border.</p>
+<h3>Book and verse IDs</h3>
+<p>For biblical books (including Apocrypha), use the OSIS ID, converted to lowercase, which itself is taken from the SBL MoS, removing spaces. For other books, use the following IDs:</p>
+<table>
+<tr><th>Book</th><th>ID</th></tr>
+<tr><td>Introduction to Bible</td><td><code>intro</code></td></tr>
+<tr><td>Introduction to OT</td><td><code>ot</code></td></tr>
+<tr><td>Introduction to NT</td><td><code>nt</code></td></tr>
+<tr><td>Appendix to Bible</td><td><code>appendix</code></td></tr>
+</table>
+<p>For encyclicals and similar texts, use the initial letters of incipit (which are commonly used as abbreviation), converted to lowercase, followed by the year of publishing, e.g. Laudato Si’ should have the ID <code>ls2015</code>.</p>
+<p>For verse IDs for biblical books use <code>bookid-chapter-verse</code> (the versification scheme to use is not yet fixed), for other books use just <code>bookid-verse</code>.</p>
+<h3>Collection types and sortkeys</h3>
+<p>For the type, use <code>bible</code> for bibles (including any collection of biblical books), and <code>doc</code> for any collection of documents by the pope, bishops, etc., including collection of encyclicals, apostolic exhorations, apostolic constitutions, etc. For internal use there are <code>help</code> for the help and <code>test</code> for tests.</p>
+<p>Usually, no sortkey is neccessary. For documents that should appear in chronological order, use the year of the first document in the collection as sortkey.</p>
+</section>
+<section data-abbr="4">
+<h2>4. Code examples</h2>
+<p>The basic document structure should be like this:</p>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body data-type="bible" data-abbr="Foo [en]"&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>Each book should have a basic structure like this:</p>
+<pre>
+&lt;article id="foo" title="Foo" data-abbr="FOO" data-abbr-section="FOO %s" data-abbr-verse="FOO %s:%v"&gt;
+&lt;section data-abbr="1"&gt;
+
+&lt;/section&gt;
+&lt;/article&gt;
+</pre>
+<p>Sections and verses in a normal biblical book should be encoded like this:</p>
+<pre>
+&lt;section data-abbr="1"&gt;
+&lt;p&gt;&lt;span class="id-big"&gt;1&amp;nbsp;&lt;/span&gt;&lt;span id="foo-1-1"&gt;&lt;span class="id"&gt;1&amp;nbsp;&lt;/span&gt;First verse&lt;/span&gt;
+&lt;span id="foo-1-2"&gt;&lt;span class="id"&gt;2&amp;nbsp;&lt;/span&gt;Second verse&lt;/span&gt;&lt;/p&gt;
+&lt;/section&gt;
+</pre>
+<p>For encyclicals the usual structure should be like this:</p>
+<pre>
+&lt;section data-abbr="1"&gt;
+&lt;h2&gt;Headline&lt;/h2&gt;
+&lt;div id="foo-1"&gt;&lt;p&gt;&lt;span class="id"&gt;1.&amp;nbsp;&lt;/span&gt;First paragraph&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id="foo-2"&gt;&lt;p&gt;&lt;span class="id"&gt;2.&amp;nbsp;&lt;/span&gt;Second paragraph&lt;/p&gt;
+&lt;p&gt;More second paragraph&lt;/p&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+</pre>
+<p>Sometimes verses aren’t as easy as that. If you need to split a verse, use a structure like this:</p>
+<pre>
+&lt;p&gt;&lt;span id="foo-1-1"&gt;&lt;span class="id"&gt;1&amp;nbsp;&lt;/span&gt;First verse, part 1&lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;Headline after paragraph break&lt;/h2&gt;
+&lt;p&gt;&lt;span data-idcont="foo-1-1"&gt;First verse, part 2&lt;/span&gt;&lt;/p&gt;
+</pre>
+<p>When two verses are merged into one, use a structure like this:</p>
+<pre>
+&lt;span id="foo-1-1"&gt;&lt;span id="foo-1-2"&gt;&lt;span class="id"&gt;1/2&amp;nbsp;&lt;/span&gt;Verse&lt;/span&gt;&lt;/span&gt;
+</pre>
+<p>For missing verses, you can add an empty verse (which will allow bookmarks for that verse to show if you added one from another version of that book where the verse is not empty). There is no need that the ID of the verse and the label agree. It is totally fine to have an ID <code>foo-1-1</code> in the section number 2, and showing <code>&lt;span class="id"&gt;3&lt;/span&gt;</code>.</p>
+</section>
+</article>
+</body>
+</html>
