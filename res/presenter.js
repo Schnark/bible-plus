@@ -266,6 +266,19 @@ Presenter.prototype.doSearch = function (range, options, resultArea) {
 	this.showProgress();
 	range.search(options).then(function (results) {
 		var html = results.map(function (result) {
+			var msg;
+			//TODO proper format
+			if (result.more) {
+				if (result.count) {
+					msg = result.count + ' more result(s) in this ' + result.range;
+				} else {
+					msg = 'There may be more results in this ' + result.range;
+				}
+				if (result.abbr) {
+					msg += ' (' + result.abbr + ')';
+				}
+				return '<li class="more">' + msg + '</li>';
+			}
 			return util.openTag('li', {
 				'data-collection': result.collection || this.collection.getId(),
 				'data-book': result.book || this.book.getId(),
@@ -373,6 +386,11 @@ Presenter.prototype.onSearchSubmit = function (e) {
 	options.content = this.searchPage.getElement('search-content').value;
 	options.ignoreCase = this.searchPage.getElement('search-case').checked;
 	options.regexp = this.searchPage.getElement('search-regexp').checked;
+	//TODO make limits configurable
+	options.sectionLimit = 5;
+	options.bookLimit = range === this.book ? 200 : 25;
+	options.collectionLimit = range === this.collection ? 200 : 50;
+	options.libraryLimit = 200;
 	this.doSearch(range, options, this.searchPage.getElement('search-results'));
 };
 

@@ -60,7 +60,7 @@ VaticanHtmlConverter.prototype.addParagraph = function (html) {
 	if (!html) {
 		return;
 	}
-	digits = /^(?:<b>|<a name="\d+">)?(\d+)\.?(?:\s|&nbsp;)*(?:<\/b>|<\/a>)?\.?(?:\s|&nbsp;)*/.exec(html);
+	digits = /^(?:<b>|<a name="\d+\.?">)? *(\d+)\.?(?:\s|&nbsp;)*(?:<\/b>|<\/a>)?\.?(?:\s|&nbsp;)*/.exec(html);
 	if (digits) {
 		this.book.verse(digits[1]);
 		html = html.slice(digits[0].length);
@@ -68,6 +68,16 @@ VaticanHtmlConverter.prototype.addParagraph = function (html) {
 	this.book.paragraph();
 	this.addHTML(html);
 };
+
+//TODO <a name>[</a><a href>12</a>]
+// a = <a [^<>]*href=["'][^\/]*#
+// href = [^<>"']*
+// b = [^<>]*>(?:<sup>)* *
+// fn = \[\d+\]
+// c = (?:<\/sup>)*<\/a>
+// tidyRe = /abfnc/
+// splitRe = /(abfnc)/
+// extractRe = /a(href)b(fn)c/
 
 VaticanHtmlConverter.prototype.getFootnote = function (id) {
 	var el = this.doc.getElementById(id.slice(1)); //id is actually the name of the backlink, the real id is that without the leading underscore
@@ -78,26 +88,26 @@ VaticanHtmlConverter.prototype.getFootnote = function (id) {
 	if (!el) {
 		return '???';
 	}
-	return this.fixHtml(util.tidy(el.innerHTML.replace(/<a [^<>]*href=["'][^\/]*#[^<>]*>(?:<sup>)*\[\d+\](?:<\/sup>)*<\/a>/, ''), ['i', 'b'])).trim();
+	return this.fixHtml(util.tidy(el.innerHTML.replace(/<a [^<>]*href=["'][^\/]*#[^<>]*>(?:<sup>)* *\[\d+\](?:<\/sup>)*<\/a>/, ''), ['i', 'b'])).trim();
 };
 
 VaticanHtmlConverter.prototype.addHTML = function (html, block) {
-	var chunks = html.split(/(<a [^<>]*href=["'][^\/]*#[^<>]*>(?:<sup>)*\[\d+\](?:<\/sup>)*<\/a>)/), i, fn;
+	var chunks = html.split(/(<a [^<>]*href=["'][^\/]*#[^<>]*>(?:<sup>)* *\[\d+\](?:<\/sup>)*<\/a>)/), i, fn;
 	for (i = 0; i < chunks.length; i++) {
 		if (i % 2 === 0) {
 			this.book[block ? 'block' : 'inline'](this.fixHtml(util.tidy(chunks[i], ['i', 'b', 'br'])));
 		} else {
-			fn = /<a [^<>]*href=["'][^\/]*#([^<>"']*)[^<>]*>(?:<sup>)*(\[\d+\])(?:<\/sup>)*<\/a>/.exec(chunks[i]);
+			fn = /<a [^<>]*href=["'][^\/]*#([^<>"']*)[^<>]*>(?:<sup>)* *(\[\d+\])(?:<\/sup>)*<\/a>/.exec(chunks[i]);
 			this.book[block ? 'block' : 'inline'](util.createFootnote(this.getFootnote(fn[1]), fn[2]));
 		}
 	}
 };
 
 VaticanHtmlConverter.prototype.convertBlock = function (base) {
-	var els = base.childNodes, i, el, text, tag, attr, head, pos;
+	var els = base.childNodes, i, el, text, tag, head, pos;
 
-	function isHead (tag, attr, el) {
-		if (tag === 'p' && attr.align) {
+	function isHead (tag, el) {
+		if (tag === 'p' && el.getAttribute('align') === 'center') {
 			return 'h2';
 		}
 		if (tag === 'p' && el.childNodes.length === 1 && el.childNodes[0].tagName === 'B') {
@@ -120,8 +130,7 @@ VaticanHtmlConverter.prototype.convertBlock = function (base) {
 			}
 		} else if (el.nodeType === 1) {
 			tag = el.tagName.toLowerCase();
-			attr = util.getAttr(el, true);
-			head = isHead(tag, attr, el);
+			head = isHead(tag, el);
 			if (head) {
 				this.addHead(el.textContent, head);
 			} else if (tag === 'p') {

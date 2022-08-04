@@ -4,7 +4,7 @@
 
 var options, app, debug;
 
-debug = false;
+debug = location.protocol === 'file:';
 
 if (debug) {
 	options = {

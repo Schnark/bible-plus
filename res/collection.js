@@ -51,13 +51,23 @@ Collection.prototype.hasBook = function (id) {
 };
 
 Collection.prototype.search = function (options) {
+	var count = 0, hasMore = false;
 	return util.asyncMap(this.getBooks(), function (data) {
+		if (options.collectionLimit && count >= options.collectionLimit) {
+			if (!hasMore) {
+				hasMore = true;
+				return [{more: true, range: 'collection'}];
+			}
+			return [];
+		}
 		return this.loadBook(data.id).then(function (book) {
-			return book.search(options).then(function (total) {
-				return total.map(function (result) {
+			return book.search(options).then(function (results) {
+				results = results.map(function (result) {
 					result.book = data.id;
 					return result;
 				});
+				count += results.length;
+				return results;
 			});
 		});
 	}.bind(this)).then(function (result) {

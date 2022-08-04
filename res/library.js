@@ -59,14 +59,28 @@ Library.prototype.loadCollection = function (id) {
 };
 
 Library.prototype.search = function (options) {
+	var count = 0, hasMore = false;
 	return util.asyncMap(this.getCollections(), function (data) {
+		if (options.libraryLimit && count >= options.libraryLimit) {
+			if (!hasMore) {
+				hasMore = true;
+				return [{more: true, range: 'library'}];
+			}
+			return [];
+		}
 		return this.loadCollection(data.id).then(function (collection) {
-			return collection.search(options).then(function (total) {
-				return total.map(function (result) {
+			return collection.search(options).then(function (results) {
+				results = results.map(function (result) {
 					result.collection = data.id;
-					result.abbr += ' <small>(' + util.htmlEscape(collection.getAbbr()) + ')</small>';
+					if (result.abbr) {
+						result.abbr += ' <small>(' + util.htmlEscape(collection.getAbbr()) + ')</small>';
+					} else {
+						result.abbr = util.htmlEscape(collection.getAbbr());
+					}
 					return result;
 				});
+				count += results.length;
+				return results;
 			});
 		});
 	}.bind(this)).then(function (result) {

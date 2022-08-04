@@ -37,19 +37,6 @@ var util = {
 
 		return '<' + tag + formatAttrs(attr) + '>';
 	},
-	getAttr: function (el, lower) {
-		var attr, attrList, name, i;
-		attr = {};
-		attrList = el.attributes || [];
-		for (i = 0; i < attrList.length; i++) {
-			name = attrList[i].name;
-			if (lower) {
-				name = name.toLowerCase();
-			}
-			attr[name] = attrList[i].value;
-		}
-		return attrList;
-	},
 	tidy: function (html, allowedTags) {
 		allowedTags = allowedTags || [];
 		return html.replace(/<(\/?)([^<> ]+)(?: ([^<>]*))?>/g, function (all, close, tag/*, attr*/) {

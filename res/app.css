@@ -216,6 +216,7 @@ header .float:not(.icon) {
 	cursor: pointer;
 	outline: solid thin #000;
 	border-radius: 50%;
+	outline-offset: -1px;
 	-moz-outline-radius: 50%;
 	color: transparent;
 }
@@ -232,7 +233,7 @@ header .float:not(.icon) {
 	line-height: 2;
 }
 
-.search-results li {
+.search-results li:not(.more) {
 	cursor: pointer;
 }
 
@@ -269,6 +270,7 @@ header .float:not(.icon) {
 .button-list-inline button {
 	line-height: 2;
 	margin: 0.75rem 0.25rem;
+	min-width: 3.5rem; /*mainly to create something like a grid*/
 }
 
 .button-list-inline li {

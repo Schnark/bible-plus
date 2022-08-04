@@ -88,52 +88,28 @@ Book.prototype.getReference = function (verses) {
 };
 
 Book.prototype.search = function (options) {
-	function getSnippet (text, start, end) {
-		return util.htmlEscape(start > 20 ? '…' + text.slice(start - 20, start) : text.slice(0, start)) +
-			'<mark>' + util.htmlEscape(text.slice(start, end)) + '</mark>' +
-			util.htmlEscape(end + 20 < text.length ? text.slice(end, end + 20) + '…' : text.slice(end));
-	}
-
+	var count = 0, hasMore = false;
 	return Promise.resolve(
 		this.sections.map(function (section, index) {
-			var text, pos, len, re, id;
-			text = options.content === 'code' ? section.innerHTML : section.textContent;
-			if (options.content === 'text-fn') {
-				text += '\n' + Array.prototype.map.call(section.querySelectorAll('.fn'), function (fn) {
-					return fn.dataset.content;
-				}).join('\n');
-			}
-			if (options.regexp) {
-				re = new RegExp(options.search, options.ignoreCase ? 'i' : '');
-				pos = text.search(re);
-				if (pos > -1) {
-					len = re.exec(text)[0].length;
+			var results;
+			if (options.bookLimit && count >= options.bookLimit) {
+				if (!hasMore) {
+					hasMore = true;
+					return [{more: true, range: 'book', abbr: util.htmlEscape(this.getAbbr())}];
 				}
-			} else {
-				if (options.ignoreCase) {
-					pos = text.toLowerCase().indexOf(options.search.toLowerCase());
-				} else {
-					pos = text.indexOf(options.search);
-				}
-				len = options.search.length;
+				return [];
 			}
-			//TODO id
-			//TODO multiple results per section
-			//TODO limit number of results
-			if (pos > -1) {
-				return {
-					section: index,
-					id: id,
-					abbr: util.htmlEscape(this.getAbbr(index, id)),
-					snippet: (options.content === 'code' ? '<code>' : '') +
-						getSnippet(text, pos, pos + len) +
-						(options.content === 'code' ? '</code>' : '')
-				};
-			}
-		}.bind(this)).filter(function (data) {
-			return data;
-		})
-	);
+			results = util.search.searchSection(options, section).map(function (result) {
+				result.section = index;
+				result.abbr = util.htmlEscape(this.getAbbr(index, result.id));
+				return result;
+			}.bind(this));
+			count += results.length;
+			return results;
+		}.bind(this))
+	).then(function (result) {
+		return [].concat.apply([], result);
+	});
 };
 
 Book.prototype.getSection = function (index) {
