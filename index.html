@@ -40,6 +40,8 @@
 <script src="res/provider.js" defer></script>
 <script src="res/scroller.js" defer></script>
 <script src="res/init.js" defer></script>
+<style id="collection-style"></style>
+<style id="user-style"></style>
 </head><body>
 <svg display="none" height="24" viewBox="0 0 24 24" width="24">
 	<symbol id="icon-x">
@@ -87,6 +89,7 @@
 <p><label><input data-config="woc" type="checkbox"> Show words of Christ in red</label></p>
 <p><label><input data-config="edits" type="checkbox"> Show edit annotations</label></p>
 <p><label><input data-config="grammer" type="checkbox"> Show grammer annotations</label></p>
+<p><label>User CSS: <textarea data-config="css" rows="5"></textarea></p>
 <p><label><input data-config="preview" type="checkbox"> Show a preview for references</label></p>
 <p><label><input data-config="resume" type="checkbox"> Resume reading at previous place</label></p>
 <h2>Import</h2>
@@ -105,6 +108,8 @@
 <p><label>Content to search: <select class="search-content"><option value="text">Text only</option><option value="text-fn">Text and footnotes</option><option value="code">HTML code</option></select></label></p>
 <p><label><input type="checkbox" class="search-case" checked> Ignore case</label></p>
 <p><label><input type="checkbox" class="search-regexp"> Treat as regular expression</label></p>
+<p><label>Number of results: <select class="search-limits"><option value="few">Few (up to 20)</option><option value="medium" selected>Medium (up to 200)</option><option value="many">Many (up to 500)</option><option value="all">All</option></select></label></p>
+<p><label><input type="checkbox" class="search-highlight" checked> Highlight results also in text</label> <button type="button" data-action="clear">Stop highlighting</button></p>
 <p><button>Search</button></p>
 </fieldset></form>
 <div class="search-results"></div>

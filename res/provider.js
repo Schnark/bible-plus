@@ -8,7 +8,12 @@ function Provider (book, bookmarks, onSectionUpdate) {
 	this.book = book;
 	this.bookmarks = bookmarks;
 	this.onSectionUpdate = onSectionUpdate;
+	this.highlightOptions = false;
 }
+
+Provider.prototype.setHighlightOptions = function (highlightOptions) {
+	this.highlightOptions = highlightOptions;
+};
 
 Provider.prototype.getSectionCount = function () {
 	return this.book.getSections().length;
@@ -59,6 +64,9 @@ Provider.prototype.manageBookmarks = function (section) {
 Provider.prototype.getSection = function (index) {
 	var section = this.book.getSection(index), links, i;
 	section = this.manageInlineFns(section);
+	if (this.highlightOptions) {
+		section = util.search.highlight(this.highlightOptions, section);
+	}
 	section = this.manageBookmarks(section);
 	links = section.querySelectorAll('.fn:not(.inline), .bookmark, .bookmark-add');
 	for (i = 0; i < links.length; i++) {

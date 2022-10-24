@@ -46,7 +46,8 @@ AnnotatedHtmlParser.prototype.parseElement = function (el) {
 };
 
 AnnotatedHtmlParser.prototype.parse = function () {
-	var base = this.doc.getElementsByTagName('body')[0];
+	var style = this.doc.getElementsByTagName('style')[0],
+		base = this.doc.getElementsByTagName('body')[0];
 	if (['bible', 'doc', 'help', 'test'].indexOf(base.dataset.type) === -1) {
 		throw new Error('Unknown type: ' + base.dataset.type);
 	}
@@ -56,7 +57,8 @@ AnnotatedHtmlParser.prototype.parse = function () {
 		type: base.dataset.type,
 		abbr: base.dataset.abbr,
 		sort: base.dataset.sort,
-		desc: base.dataset.desc
+		desc: base.dataset.desc,
+		css: style ? style.textContent : ''
 	});
 	this.parseElement(base);
 	return this.getData();

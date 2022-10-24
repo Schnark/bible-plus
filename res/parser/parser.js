@@ -14,6 +14,7 @@ AbstractParser.prototype.init = function (data) {
 	this.data.abbr = data.abbr;
 	this.data.sort = data.sort || '';
 	this.data.desc = data.desc || '';
+	this.data.css = data.css || '';
 	this.data.books = [];
 	this.bookStr = {};
 };

@@ -15,13 +15,14 @@ select {
 
 button {
 	/*set the default value explicitely*/
-	-moz-box-sizing: boder-box;
+	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
 input:not([type="checkbox"]),
-select {
+select,
+#config-page textarea {
 	display: block;
 	width: 100%;
 	margin: 0px;
@@ -500,7 +501,7 @@ button.intro {
 /*TODO
 not all color combinations have a good contrast,
 though at least normal text on most backgrounds
-and in all skins is okey.
+and in all skins is okay.
 */
 @keyframes flash {
 	0% {
@@ -513,6 +514,13 @@ and in all skins is okey.
 		background-color: hsla(60,50%,60%,0.5);
 	}
 }
+
+/*TODO
+style mark elements, something like
+mark {
+	color: inherit;
+	background-color: hsla(60,50%,60%,0.75);
+}*/
 
 .highlight-temp {
 	animation: flash 0.5s;

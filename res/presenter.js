@@ -105,6 +105,8 @@ function Presenter () {
 			save: this.onBookmarkSaveClick.bind(this)
 		}
 	);
+	this.collectionStyle = document.getElementById('collection-style');
+	this.userStyle = document.getElementById('user-style');
 }
 
 Presenter.prototype.init = function (libraryPromise, config, bookmarks, history) {
@@ -177,6 +179,9 @@ Presenter.prototype.initConfig = function () {
 			inputs[i].addEventListener('change', onInputChange);
 		}
 	}
+	config.onChange('css', function (css) {
+		this.userStyle.textContent = css;
+	}.bind(this));
 };
 
 Presenter.prototype.initDrop = function () {
@@ -217,11 +222,14 @@ Presenter.prototype.setLibrary = function (library) {
 };
 
 Presenter.prototype.setCollection = function (collection) {
+	var css = '';
 	this.collection = collection;
 	this.setBook(null);
 	if (collection) {
 		document.getElementById('book-page').getElementsByClassName('collection')[0].textContent = this.collection.getAbbr();
+		css = this.collection.getCSS();
 	}
+	this.collectionStyle.textContent = css;
 };
 
 Presenter.prototype.setBook = function (book) {
@@ -229,7 +237,11 @@ Presenter.prototype.setBook = function (book) {
 	this.sectionIndex = undefined;
 	this.config.set('resume-possible', !!book);
 	if (book) {
-		this.bookScroller.setProvider(new Provider(book, this.bookmarks, this.onSectionUpdate.bind(this)));
+		this.provider = new Provider(book, this.bookmarks, this.onSectionUpdate.bind(this));
+		if (this.highlightOptions) {
+			this.provider.setHighlightOptions(this.highlightOptions);
+		}
+		this.bookScroller.setProvider(this.provider);
 	}
 };
 
@@ -266,17 +278,15 @@ Presenter.prototype.doSearch = function (range, options, resultArea) {
 	this.showProgress();
 	range.search(options).then(function (results) {
 		var html = results.map(function (result) {
-			var msg;
-			//TODO proper format
+			var msg, moreMsgs = {
+				unknown: 'There may be more results in this %r',
+				one: 'One more result in this %r',
+				many: '%n more results in this %r'
+			};
 			if (result.more) {
-				if (result.count) {
-					msg = result.count + ' more result(s) in this ' + result.range;
-				} else {
-					msg = 'There may be more results in this ' + result.range;
-				}
-				if (result.abbr) {
-					msg += ' (' + result.abbr + ')';
-				}
+				msg = moreMsgs[result.count ? (result.count === 1 ? 'one' : 'many') : 'unknown'];
+				msg = msg.replace(/%n/g, result.count);
+				msg = msg.replace(/%r/g, result.range + (result.abbr ? ' (' + result.abbr + ')' : ''));
 				return '<li class="more">' + msg + '</li>';
 			}
 			return util.openTag('li', {
@@ -357,6 +367,14 @@ Presenter.prototype.onSearchCloseClick = function () {
 
 Presenter.prototype.onSearchBodyClick = function (e) {
 	var li, data;
+	if (e.target.dataset.action === 'clear') {
+		if (this.provider) {
+			this.provider.setHighlightOptions(false);
+		}
+		this.highlightOptions = false;
+		//TODO update all currently loaded sections
+		return;
+	}
 	li = util.getParent(e.target, 'LI');
 	if (li) {
 		data = li.dataset;
@@ -368,7 +386,7 @@ Presenter.prototype.onSearchBodyClick = function (e) {
 };
 
 Presenter.prototype.onSearchSubmit = function (e) {
-	var range, options = {};
+	var range, options = {}, limits, highlight;
 	e.preventDefault();
 	switch (this.searchPage.getElement('search-select').value) {
 	case 'library':
@@ -386,11 +404,38 @@ Presenter.prototype.onSearchSubmit = function (e) {
 	options.content = this.searchPage.getElement('search-content').value;
 	options.ignoreCase = this.searchPage.getElement('search-case').checked;
 	options.regexp = this.searchPage.getElement('search-regexp').checked;
-	//TODO make limits configurable
-	options.sectionLimit = 5;
-	options.bookLimit = range === this.book ? 200 : 25;
-	options.collectionLimit = range === this.collection ? 200 : 50;
-	options.libraryLimit = 200;
+	limits = {
+		few: {
+			section: 1,
+			book: 2,
+			collection: 5,
+			total: 20
+		},
+		medium: {
+			section: 5,
+			book: 25,
+			collection: 50,
+			total: 200
+		},
+		many: {
+			section: 10,
+			book: 50,
+			collection: 100,
+			total: 500
+		}
+		//all: false
+	}[this.searchPage.getElement('search-limits').value];
+	if (limits) {
+		options.sectionLimit = limits.section;
+		options.bookLimit = range === this.book ? limits.total : limits.book;
+		options.collectionLimit = range === this.collection ? limits.total : limits.collection;
+		options.libraryLimit = limits.total;
+	}
+	highlight = this.searchPage.getElement('search-highlight').checked;
+	if (this.provider) {
+		this.provider.setHighlightOptions(highlight && options);
+	}
+	this.highlightOptions = highlight && options;
 	this.doSearch(range, options, this.searchPage.getElement('search-results'));
 };
 
@@ -550,7 +595,11 @@ Presenter.prototype.onBookTocBodyClick = function (e) {
 };
 
 Presenter.prototype.onBookBodyClick = function (e) {
-	var link = util.getParent(e.target, 'A'), hadOpenPopup, ref, idEl;
+	var link = util.getParent(e.target, 'A'),
+		fn = util.getParent(e.target, function (el) {
+			return el.classList && el.classList.contains('fn') && !el.classList.contains('inline');
+		}),
+		hadOpenPopup, ref, idEl;
 	hadOpenPopup = this.closePopups();
 	if (link) {
 		ref = /^#([a-z0-9]+)(?:-(\S+))?$/.exec(link.getAttribute('href'));
@@ -565,8 +614,8 @@ Presenter.prototype.onBookBodyClick = function (e) {
 		} else if (hadOpenPopup) {
 			e.preventDefault();
 		}
-	} else if (e.target.classList.contains('fn') && !e.target.classList.contains('inline')) {
-		this.showFootnote(e.target.dataset.content);
+	} else if (fn) {
+		this.showFootnote(fn.dataset.content);
 	} else if (e.target.classList.contains('bookmark')) {
 		this.showBookmark(e.target.dataset.content, e.target.dataset.id);
 	} else if (e.target.classList.contains('bookmark-add')) {

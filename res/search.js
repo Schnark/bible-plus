@@ -15,7 +15,7 @@ function getHtmlAndIds (el) {
 }
 
 function getTextAndIds (el) {
-	var text, ids, i, childData;
+	var text, ids, id, i, childData;
 
 	function shiftIdData (oldIdData) {
 		oldIdData[1] += text.length;
@@ -25,24 +25,22 @@ function getTextAndIds (el) {
 	switch (el.nodeType) {
 	case 1:
 		//TODO perhaps also drop .id, id-big, .fn, .fn-ref
-		//TODO perhaps also replace img with alt
 		if (el.nodeName === 'BR') {
-			return {
-				content: ' ',
-				ids: []
-			};
+			text = ' ';
+		} else if (el.nodeName === 'IMG') {
+			text = el.alt || '';
+		} else {
+			text = '';
 		}
-		text = '';
+		id = el.id || el.dataset.idcont;
 		ids = [];
 		for (i = 0; i < el.childNodes.length; i++) {
 			childData = getTextAndIds(el.childNodes[i]);
 			ids = ids.concat(childData.ids.map(shiftIdData));
 			text += childData.content;
 		}
-		if (el.id) {
-			ids.push([el.id, 0, text.length]);
-		} else if (el.dataset.idcont) {
-			ids.push([el.dataset.idcont, 0, text.length]);
+		if (id) {
+			ids.push([id, 0, text.length]);
 		}
 		return {
 			content: text,
@@ -57,14 +55,53 @@ function getTextAndIds (el) {
 	}
 }
 
-function getContentAndIds (el, asHTML) {
-	var data;
-	if (asHTML) {
+function getParentIds (el, base) {
+	var ids = [], id;
+	function getId (el) {
+		return el.id || (el.dataset && el.dataset.idcont);
+	}
+	function hasIdOrIsBase (el) {
+		return getId(el) || el === base;
+	}
+	while (el !== base) {
+		id = getId(el);
+		if (id) {
+			ids.push(id);
+		}
+		el = util.getParent(el.parentNode, hasIdOrIsBase);
+	}
+	return ids;
+}
+
+function getContentAndIds (el, mode) {
+	var data, div;
+	if (mode === 'code') {
 		data = getHtmlAndIds(el);
 	} else {
 		data = getTextAndIds(el);
 	}
 	data.content = data.content.replace(/\n/g, ' ');
+
+	if (mode === 'text-fn') {
+		div = document.createElement('div');
+		Array.prototype.forEach.call(el.querySelectorAll('.fn'), function (fn) {
+			var fnText, fnIds;
+			div.innerHTML = fn.dataset.content;
+			fnText = div.textContent;
+			fnIds = getParentIds(fn, el);
+			if (fnIds.length > 0) {
+				fnIds.forEach(function (id) {
+					data.ids.push([id, data.content.length + 1, fnText.length]);
+				});
+			}
+			data.content += '\n' + fnText;
+		});
+		if (el.classList.contains('fn')) { //this will only happen in highlight mode
+			div.innerHTML = el.dataset.content;
+			data.content += '\n' + div.textContent;
+		}
+	}
+
 	return data;
 }
 
@@ -110,6 +147,10 @@ function getId (ids, pos, len) {
 }
 
 function truncateStart (text) {
+	var nl = text.lastIndexOf('\n');
+	if (nl > -1) {
+		text = text.slice(nl + 1);
+	}
 	return text.length > 25 ? '…' + text.slice(-20) : text;
 }
 
@@ -118,6 +159,10 @@ function truncateMiddle (text) {
 }
 
 function truncateEnd (text) {
+	var nl = text.indexOf('\n');
+	if (nl > -1) {
+		text = text.slice(0, nl);
+	}
 	return text.length > 25 ? text.slice(0, 20) + '…' : text;
 }
 
@@ -139,12 +184,7 @@ function formatMatch (text, ids, pos, len, asCode) {
 function searchSection (options, section) {
 	var contentAndIds, matches, more;
 
-	contentAndIds = getContentAndIds(section, options.content === 'code');
-	if (options.content === 'text-fn') {
-		contentAndIds.content += '\n' + Array.prototype.map.call(section.querySelectorAll('.fn'), function (fn) {
-			return fn.dataset.content; //TODO as text, add id data
-		}).join('\n');
-	}
+	contentAndIds = getContentAndIds(section, options.content);
 	matches = getMatches(contentAndIds.content, options.search, options.ignoreCase, options.regexp);
 	if (options.sectionLimit && matches.length > options.sectionLimit) {
 		more = {
@@ -163,8 +203,73 @@ function searchSection (options, section) {
 	return matches;
 }
 
+function applyHighlight (options, element, innerOnly) {
+	var content, matches, i, match, div, didHighlightChildren, mark;
+	if (element.nodeType === 3 || element.nodeType === 4) {
+		content = element.textContent;
+		if (options.content === 'code') {
+			content = util.htmlEscape(content);
+		}
+	} else {
+		if (options.content === 'code') {
+			content = innerOnly ? element.innerHTML : element.outerHTML;
+		} else {
+			content = getContentAndIds(element, options.content).content;
+		}
+	}
+	matches = getMatches(content, options.search, options.ignoreCase, options.regexp);
+	if (matches.length === 0) {
+		return;
+	}
+	//highlight text node
+	if (element.nodeType === 3) {
+		for (i = matches.length - 1; i >= 0; i--) {
+			element.splitText(matches[i][0] + matches[i][1]);
+			match = element.splitText(matches[i][0]);
+			mark = document.createElement('mark');
+			match.parentNode.insertBefore(mark, match);
+			mark.appendChild(match);
+		}
+		return true;
+	}
+	//highlight footnote
+	if (element.dataset && element.dataset.content) {
+		div = document.createElement('div');
+		div.innerHTML = element.dataset.content;
+		if (applyHighlight(options, div, true)) {
+			element.dataset.content = div.innerHTML;
+		}
+	}
+	//highlight children
+	Array.prototype.slice.call(element.childNodes).forEach(function (child) {
+		if (applyHighlight(options, child)) {
+			didHighlightChildren = true;
+		}
+	});
+	if (!didHighlightChildren) {
+		//this means the match spans several child nodes, or is inside the tag
+		//just highlight all content
+		mark = document.createElement('mark');
+		if (element.childNodes.length) {
+			while (element.childNodes.length) {
+				mark.appendChild(element.childNodes[0]);
+			}
+			element.appendChild(mark);
+		} else {
+			element.parentNode.insertBefore(mark, element);
+			mark.appendChild(element);
+		}
+	}
+	return true;
+}
+
+function highlight (options, section) {
+	applyHighlight(options, section, true);
+	return section;
+}
+
 util.search = {
-	searchSection: searchSection
-	//TODO highlight
+	searchSection: searchSection,
+	highlight: highlight
 };
 })();

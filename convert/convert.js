@@ -338,7 +338,7 @@ function showStructure (html, depth) {
 		if (!tag && attr.trim()) {
 			add('{text}');
 		} else if (!tag) {
-			//ignore
+			return;
 		} else if (tag === 'section' && attr) {
 			add('<section> (' + attr['data-abbr'] + ')');
 			indent();
@@ -391,7 +391,8 @@ function onChange (e) {
 			document.getElementById('book-name').innerHTML = parseStructure(val).filter(function (element) {
 				return element.type === 'leaf';
 			}).map(function (element) {
-				return '<option' + (element.label === book ? ' selected' : '') + '>' + util.htmlEscape(element.label) + '</option>';
+				return '<option' + (element.label === book ? ' selected' : '') + '>' +
+					util.htmlEscape(element.label) + '</option>';
 			}).join('');
 			data.structure = val;
 		} catch (e) {

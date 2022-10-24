@@ -96,7 +96,8 @@ function basicIdCheck (ids, prefix, postfix, expected) {
 	}
 	n = Math.max.apply(Math, ids);
 	if (ids.length !== n) {
-		return '<p>Some ID is missing (there are ' + ids.length + ' IDs, but the maximum is ' + prefix + n + postfix + ').</p>';
+		return '<p>Some ID is missing (there are ' + ids.length + ' IDs, ' +
+			'but the maximum is ' + prefix + n + postfix + ').</p>';
 	}
 	if (expected && ids.length !== expected) {
 		return '<p>Maximum ID is ' + prefix + ids.length + postfix + ', instead of expected ' + expected + '.</p>';

@@ -33,6 +33,10 @@ CompareCollection.prototype.getDesc = function () {
 	return '';
 };
 
+CompareCollection.prototype.getCSS = function () {
+	return this.c1.getCSS() + this.c2.getCSS();
+};
+
 CompareCollection.prototype.getBooks = function (includeGroups) {
 	return this.c1.getBooks(includeGroups).filter(function (book) { //TODO remove empty groups
 		return !book.id || this.c2.hasBook(book.id);

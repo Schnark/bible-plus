@@ -38,6 +38,10 @@ Collection.prototype.getDesc = function () {
 	return this.data.desc;
 };
 
+Collection.prototype.getCSS = function () {
+	return this.data.css || '';
+};
+
 Collection.prototype.getBooks = function (includeGroups) {
 	return includeGroups ? this.data.books : this.data.books.filter(function (book) {
 		return book.id;
@@ -91,12 +95,14 @@ Collection.prototype.export = function () {
 		}
 		return '</div>';
 	}.bind(this))).then(function (html) {
+		var css = this.getCSS().trim();
 		html.unshift(
 			'<!DOCTYPE html>',
 			util.openTag('html', {lang: this.getLang()}),
 			'<head>',
 			'<meta charset="utf-8">',
 			'<title>' + util.htmlEscape(this.getTitle()) + '</title>',
+			css ? '<style>\n' + css + '\n</style>' : '',
 			'</head>',
 			util.openTag('body', {
 				'data-type': this.getType(),
@@ -110,7 +116,9 @@ Collection.prototype.export = function () {
 			'</html>'
 		);
 
-		return html.join('\n');
+		return html.filter(function (line) {
+			return line;
+		}).join('\n');
 	}.bind(this));
 };
 

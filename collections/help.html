@@ -41,8 +41,6 @@
 <section data-abbr="3">
 <h2>3. Future plans</h2>
 <p>I have several ideas for future improvements.</p>
-<h3>Improved search</h3>
-<p>Currently the search has some minor issues. For example, it should be possible to configure the number of results. It should also be possible to highlight the search term in the text.</p>
 <h3>Different versification schemes</h3>
 <p>All bibles should internally use the same versification scheme. Currently they just use what the source uses. In almost every case this shouldn’t be a problem, but it might be improved in future. This should also include solutions to handle books like Daniel, which sometimes is split into two books.</p>
 <h3>Improved comparing translations</h3>
@@ -54,7 +52,6 @@
 <li>A function to select a random chapter or verse</li>
 <li>Better support for grammer annotations</li>
 <li>Encode footnotes in a way that makes them usable in plain HTML</li>
-<li>Improved support for CSS styles: style sheets in collections, arbitrary user style sheets</li>
 <li>Allow direct editing of books (to correct small mistakes, etc.)</li>
 </ul>
 </section>
@@ -94,6 +91,7 @@
 <dt>Description</dt> <dd>An optional short description of the collection.<br>Example: Name of the translator and date of the translation.</dd>
 <dt>Language</dt> <dd>The (main) language of the collection.</dd>
 <dt>Sortkey</dt> <dd>An optional key used for the order of collections.</dd>
+<dt>Style</dt> <dd>An optional CSS style sheet.</dd>
 <dt>Content</dt> <dd>The list of groups and books in the collection.</dd>
 </dl></dd>
 
@@ -155,7 +153,7 @@
 <p>The elements and their properties are represented as an HTML document. In most cases each element is represented by an HTML tag with the properties as attributes.</p>
 <dl>
 <dt>Collection</dt>
-<dd>HTML document, with attribute <code>lang</code>, <code>&lt;title&gt;</code> in the head, and on <code>&lt;body&gt;</code> attributes <code>data-type</code>, <code>data-abbr</code>, <code>data-sort</code>, <code>data-desc</code>, and the content inside it. Feel free to add other meta-data to the head, though it will be ignored and won’t survive export.</dd>
+<dd>HTML document, with attribute <code>lang</code>, <code>&lt;title&gt;</code>, <code>&lt;style&gt;</code> in the head, and on <code>&lt;body&gt;</code> attributes <code>data-type</code>, <code>data-abbr</code>, <code>data-sort</code>, <code>data-desc</code>, and the content inside it. Feel free to add other meta-data to the head, though it will be ignored and won’t survive export. Use additional styles only if really needed, see also the remarks about inline styles below.</dd>
 
 <dt>Group</dt>
 <dd><code>&lt;div&gt;</code> with attribute <code>title</code>, and content inside it.</dd>
@@ -199,7 +197,7 @@
 <tr><td><code>colored</code></td><td>For styling, uses the same accent color as for headlines</td>
 <td><code>a &lt;span class="colored"&gt;colored&lt;/span&gt; word</code></td><td>a <span class="colored">colored</span> word</td></tr>
 <tr><td><code>border</code></td><td>Adds a small border e.g. to an image</td>
-<td><code>&lt;img src="data:image/png;base64,iV..." class="border"&gt;</code></td><td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YGARc5KB0XV+IAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAF1JREFUGNO9zL0NglAAxPEfdLTs4BZM4DIO4C7OwQg2JoQ9LE1exdlYvBBeZ7jqch9//q1uH4TLzw4d6+ErXMMcXuHWxId3KOETnnXXV6MJpcq2MLaI97CER3N0vr4MkhoXe0rZigAAAABJRU5ErkJggg==" class="border"></td></tr>
+<td><code>&lt;img src="data:image/png;base64,iV..." class="border"&gt;</code></td><td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YGARc5KB0XV+IAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAF1JREFUGNO9zL0NglAAxPEfdLTs4BZM4DIO4C7OwQg2JoQ9LE1exdlYvBBeZ7jqch9//q1uH4TLzw4d6+ErXMMcXuHWxId3KOETnnXXV6MJpcq2MLaI97CER3N0vr4MkhoXe0rZigAAAABJRU5ErkJggg==" alt="Red dot" class="border"></td></tr>
 <tr><td><code>intro</code></td><td>Marks an introduction. Can be used on books (Example: Introduction to the Gospels, as a separate book before the gospels themselves), a section (Example: Introduction to a specific book inside that book), or actually anywhere else. Introductions in this sense also include appendices.</td>
 <td><code>&lt;section class="intro" data-abbr="I"&gt;...&lt;/section&gt;</code></td><td></td></tr>
 <tr><td><code>id</code></td><td>Marks an element as visual representation of the ID of a verse</td>
