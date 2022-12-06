@@ -3,6 +3,7 @@
 (function () {
 "use strict";
 
+
 //TODO util?
 function slice (array, start, end) {
 	if (array.slice) {
@@ -105,7 +106,9 @@ function parseOsis (book, el, options) {
 			if (child.getAttribute('type') === 'psalm') {
 				level = '3';
 			}
-			book.block('<h' + level + '>' + util.htmlEscape(child.textContent) + '</h' + level + '>');
+			if (child.textContent) { //ignore empty headlines
+				book.block('<h' + level + '>' + util.htmlEscape(child.textContent) + '</h' + level + '>');
+			}
 			break;
 		case 'note':
 			//TODO more than just text content?
@@ -151,8 +154,11 @@ function parseOsis (book, el, options) {
 			parseOsis(book, child, options);
 			break;
 		case 'hi':
+		case 'seg':
+		case 'transChange':
 			marker = child.getAttribute('type');
 			marker = {
+				//hi
 				acrostic: ['<abbr>', '</abbr>'],
 				bold: ['<b>', '</b>'],
 				emphasis: ['<em>', '</em>'],
@@ -161,10 +167,22 @@ function parseOsis (book, el, options) {
 				'small-caps': ['<span style="font-variant: small-caps;">', '</span>'],
 				sub: ['<sub>', '</sub>'],
 				super: ['<sup>', '</sup>'],
-				underline: ['<u>', '</u>']
+				underline: ['<u>', '</u>'],
+				//seg
+				'x-variant': ['<span class="edit-alternative">', '</span>'],
+				//transChange
+				added: ['<span class="edit-added">', '</span>'],
+				deleted: ['<span class="edit-removed">', '</span>'],
+				amplified: ['<span class="edit-modified">', '</span>'],
+				changed: ['<span class="edit-modified">', '</span>'],
+				implied: ['<span class="edit-modified">', '</span>'],
+				moved: ['<span class="edit-modified">', '</span>'],
+				tenseChange: ['<span class="edit-modified">', '</span>']
 			}[marker] || null;
 			if (marker) {
 				book.inline(marker[0]);
+			} else {
+				console.warn('Unknown type "' + child.getAttribute('type') + '" for ' + child.nodeName);
 			}
 			parseOsis(book, child, options);
 			if (marker) {
@@ -231,7 +249,8 @@ SwordParser.prototype.parseGroup = function (path, group) {
 	var bzs = parseBZS(util.file.extractZip(this.zip, path + '.bzs', 'arraybuffer')),
 		bzv = parseBZV(util.file.extractZip(this.zip, path + '.bzv', 'arraybuffer')),
 		bzz = parseBZZ(util.file.extractZip(this.zip, path + '.bzz', 'arraybuffer'), bzs),
-		data = bibleData.getBooksBySwordGroup(group, this.lang), i; //TODO different versification
+		data = bibleData.getBooksBySwordGroup(group, this.lang, this.versification),
+		i;
 	this.verses = extractVerses(bzz, bzv);
 	this.index = 0;
 	for (i = 0; i < data.length; i++) {
@@ -309,7 +328,7 @@ SwordParser.prototype.parse = function () {
 	if (conf.encoding !== 'UTF-8') {
 		throw new Error('Unsupported Encoding: ' + conf.encoding);
 	}
-	if ((conf.versification || 'KJV') !== 'KJV') {
+	if (!bibleData.versificationExists(conf.versification || 'KJV')) {
 		throw new Error('Unsupported Versification: ' + conf.versification);
 	}
 	path = conf.datapath || '';
@@ -317,6 +336,7 @@ SwordParser.prototype.parse = function () {
 		path = path.slice(2);
 	}
 	this.lang = conf.lang || 'en';
+	this.versification = conf.versification || 'KJV';
 	this.qToTick = (conf.osisqtotick !== 'false');
 	this.init({
 		lang: this.lang,

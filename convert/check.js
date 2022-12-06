@@ -131,6 +131,10 @@ function checkTwoPartIds (ids, prefix, bibleBookData) {
 		return acc;
 	}, {});
 
+	//FIXME bibleBookData.chapters used to exist and reflect the KJV versification scheme
+	//This was never really great, and now no longer exists. The data should come from some
+	//better source, or the code should be simplified if we decide that we don't know the
+	//expected verses anyway.
 	expectedChapters = bibleBookData && bibleBookData.chapters;
 	brokenIds = basicIdCheck(Object.keys(chapters), prefix, '-*', expectedChapters && expectedChapters.length);
 	if (brokenIds) {
