@@ -1,8 +1,8 @@
 {
-	"version": "1.3",
+	"version": "1.4",
 	"name": "Bible+",
 	"description": "Reader for bibles and other books",
-	"size": 107708,
+	"size": 108071,
 	"package_path": "http://localhost:8080/bible-plus.zip",
 	"icons": {
 		"128": "/res/icon/icon128.png",
@@ -19,7 +19,13 @@
 				"filename": {
 					"pattern": ".*\\.(zip|html|xml)",
 					"regexp": "\\.(zip|html|xml)$"
-				}
+				},
+				"type": [
+					"application/zip",
+					"text/html",
+					"text/xml",
+					""
+				]
 			},
 			"disposition": "window",
 			"returnValue": false,

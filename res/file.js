@@ -5,6 +5,7 @@
 
 var mimeMap = {
 	html: 'text/html',
+	json: 'application/json',
 	xml: 'application/xml'
 }, activityHandler, activityData;
 
@@ -43,6 +44,8 @@ function readFile (file, type) {
 				result = (new DOMParser()).parseFromString(result, mimeMap[type]);
 			} else if (type === 'zip') {
 				result = new ZipArchive(result);
+			} else if (type === 'json') {
+				result = JSON.parse(result);
 			}
 			resolve(result);
 		};
@@ -95,8 +98,16 @@ function pickFile (type) {
 			});
 
 			pick.onsuccess = function () {
+				var blob;
 				if (this.result.blob) {
-					resolve(this.result.blob);
+					blob = this.result.blob;
+					if (!blob.name) {
+						blob.name = this.result.name ||
+							this.result.filename ||
+							this.result.title ||
+							'noname.zip';
+					}
+					resolve(blob);
 				} else {
 					reject('No file selected');
 				}
@@ -128,11 +139,19 @@ function pickFile (type) {
 
 if (navigator.mozSetMessageHandler) {
 	navigator.mozSetMessageHandler('activity', function (request) {
+		var blob;
 		if (request && request.source && request.source.data && request.source.data.blob) {
+			blob = request.source.data.blob;
+			if (!blob.name) {
+				blob.name = request.source.data.name ||
+					request.source.data.filename ||
+					request.source.data.title ||
+					'noname.zip';
+			}
 			if (activityHandler) {
-				activityHandler(request.source.data.blob);
+				activityHandler(blob);
 			} else {
-				activityData = request.source.data.blob;
+				activityData = blob;
 			}
 		}
 	});

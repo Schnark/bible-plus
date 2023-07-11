@@ -1,4 +1,5 @@
 /*global Bookmarks: true*/
+/*global util*/
 Bookmarks =
 (function () {
 "use strict";
@@ -74,6 +75,21 @@ Bookmarks.prototype.getList = function (book, collection) {
 	bmBook.sort(compare);
 	bmOther.sort(compare);
 	return bmBook.concat(bmOther);
+};
+
+Bookmarks.prototype.export = function () {
+	util.file.save(JSON.stringify(this.data), 'bible-plus-bookmarks.json', 'image/png'); //wrong mime intentional
+};
+
+Bookmarks.prototype.import = function () {
+	return util.file.pickFile('json').then(function (file) {
+		return util.file.readFile(file, 'json').then(function (data) {
+			this.data = data;
+			return this.database.storeItem('bookmarks', this.data);
+		}.bind(this));
+	}.bind(this), function () {
+		//ignore
+	});
 };
 
 return Bookmarks;

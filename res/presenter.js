@@ -321,6 +321,18 @@ Presenter.prototype.onConfigCloseClick = function () {
 Presenter.prototype.onConfigBodyClick = function (e) {
 	var action = e.target.dataset.action, id = e.target.dataset.id, p;
 	switch (action) {
+	case 'export-bookmarks':
+		this.bookmarks.export();
+		break;
+	case 'import-bookmarks':
+		this.showProgress();
+		this.bookmarks.import().then(function () {
+			this.hideProgress();
+		}.bind(this), function (e) {
+			this.hideProgress();
+			this.showError('Error while importing bookmarks: ' + e);
+		}.bind(this));
+		break;
 	case 'import-collection':
 		this.importFile();
 		break;
