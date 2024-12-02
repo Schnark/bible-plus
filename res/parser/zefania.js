@@ -40,7 +40,7 @@ function parseInlineTag (tag) {
 		switch (el.nodeName.toLowerCase()) {
 		case '#cdata-section':
 		case '#text':
-			html.push(el.textContent.replace(/\n/g, ' '));
+			html.push(util.htmlEscape(el.textContent.replace(/\n/g, ' ')));
 			break;
 		case 'br':
 			html.push(el.getAttribute('art') === 'x-nl' ? '<br>' : '\n');

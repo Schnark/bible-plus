@@ -60,7 +60,7 @@ RoundtripHtmlConverter.prototype.convertElement = function (el) {
 		var cls = (attr && attr['class']) || '';
 		switch (name) {
 		case '':
-			this.book.inline(attr);
+			this.book.inline(util.htmlEscape(attr));
 			return;
 		case 'div': return true;
 		case 'i':
